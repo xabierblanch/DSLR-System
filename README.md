@@ -4,8 +4,3 @@ Contact: xabierblanch@gmail.com
 
 Codes and scripts programmed for the correct operation of DSLR systems - Granada Alhambra.
 Codes developed as part of a doctoral research at Universtiy of Barcelona (PhD)
-
-Codes dividied by:
-Main code
-Installation and operational codes
-Extra features
