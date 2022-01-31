@@ -25,15 +25,15 @@ captures = 5
 #########################################################################
 
 if ID == "DSLR1_":
-    TOKEN = "PxYI5GpMD2AAAAAAAAAAC_Irv5v9nzqH-yZGiooAvB3fXCi2vnU99m0FsiLugqSr"
+    TOKEN = ""
 elif ID == "DSLR2_":
-    TOKEN = "PxYI5GpMD2AAAAAAAAAADBloxEwqqZcUrKCiApOU0ryUnNvpkqdqEO8C5AYWeELC"
+    TOKEN = ""
 elif ID == "DSLR3_":
-    TOKEN = "PxYI5GpMD2AAAAAAAAAADzIq3myXVj61QtmjBhbTugAQdRv2loSpBJ1nD5lRjrjr"
+    TOKEN = ""
 elif ID == "DSLR4_":
-    TOKEN = "PxYI5GpMD2AAAAAAAAAADcZ4K-7-jssfEQUK5QX_gQY0bflC1KVsxhJ-gOPlfpWn"
+    TOKEN = ""
 elif ID == "DSLR5_":
-    TOKEN = "PxYI5GpMD2AAAAAAAAAADlJQoaG68X7IO8I5q5doN4scX6B6sEpDf7oH4GbaiHGS"
+    TOKEN = ""
 
 print()
 print("*********************** UNIVERSITAT DE BARCELONA ***********************")
