@@ -25,15 +25,15 @@ captures = 5
 #########################################################################
 
 if ID == "DSLR1_":
-    TOKEN = ""
+    TOKEN = "TOKEN"
 elif ID == "DSLR2_":
-    TOKEN = ""
+    TOKEN = "TOKEN"
 elif ID == "DSLR3_":
-    TOKEN = ""
+    TOKEN = "TOKEN"
 elif ID == "DSLR4_":
-    TOKEN = ""
+    TOKEN = "TOKEN"
 elif ID == "DSLR5_":
-    TOKEN = ""
+    TOKEN = "TOKEN"
 
 print()
 print("*********************** UNIVERSITAT DE BARCELONA ***********************")
