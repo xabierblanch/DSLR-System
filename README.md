@@ -16,7 +16,7 @@ Image:
 Usage
 -----
 
-* [DSLR_UB_v2.5.py](DSLR_UB_v2.5.py) -> Main code
+* [DSLR_UB_v2.5.py](DSLR_UB_v2.5.py) -> Main code (executes camera control and photo uploading)
 
 Raspberry auxiliary codes (sh format)
 
