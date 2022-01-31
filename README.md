@@ -10,8 +10,6 @@ How to cite:
 -----
 * Pending publication (PhD thesis)
 
-* Blanch, X.; Eltner, A.; Guinau, M.; Abellan, A. Multi-Epoch and Multi-Imagery (MEMI) Photogrammetric Workflow for Enhanced Change Detection Using Time-Lapse Cameras. Remote Sens. 2021, 13, 1460. https://doi.org/10.3390/rs13081460
-
 Image:
 -----
 ![Figure_II-15](https://user-images.githubusercontent.com/37353398/151872463-6af74ad3-00e4-4dbf-b5d8-ce6b7dbb89aa.jpg)
