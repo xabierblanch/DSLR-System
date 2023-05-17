@@ -10,9 +10,9 @@ How to cite:
 -----
 * Pending publication (High-end photogrammetric system)
 
-* Blanch, X., 2022. Developing Advanced Photogrammetric Methods for Automated Rockfall Monitoring. Doctoral dissertation. Universitat de Barcelona. Retrieved from: http://hdl.handle.net/10803/675397
+PhD Thesis:
 
-* Blanch, X.; Eltner, A.; Guinau, M.; Abellan, A. Multi-Epoch and Multi-Imagery (MEMI) Photogrammetric Workflow for Enhanced Change Detection Using Time-Lapse Cameras. Remote Sens. 2021, 13, 1460. https://doi.org/10.3390/rs13081460
+* Blanch, X., 2022. Developing Advanced Photogrammetric Methods for Automated Rockfall Monitoring. Doctoral dissertation. Universitat de Barcelona. Retrieved from: http://hdl.handle.net/10803/675397
 
 Image:
 -----
