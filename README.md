@@ -2,7 +2,7 @@
 Author: Xabier Blanch<br/>
 Contact: xabierblanch@gmail.com<br/>
 
-Codes and scripts programmed for the correct operation of HRCam systems installed in Puigcercós (Catalunya).
+Codes and scripts programmed for the correct operation of High Resolution systems installed in Puigcercós (NE Spain) and in the Alhambra de Granada (S Spain).
 
 Codes developed as part of a doctoral research at Universtiy of Barcelona (PhD). All these codes are developed for a particular case, some modifications will be necessary. If you use these codes or if they inspire you in your work, please share it with me :D (And cite it correctly).
 
