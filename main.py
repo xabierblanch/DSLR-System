@@ -13,44 +13,30 @@ temps_inicial = time.time()
 #########################################################################
 #########################################################################
 
-#IDENTIFICADOR DEL SISTEMA -> IMPORTANT CANVIAR-HO CORRECTAMENT
+#SYSTEM IDENTIFIER -> IMPORTANT TO CHANGE IT CORRECTLY
 
-ID = "HRCam4_"
+ID = "DSLR_"
 
-#PARÀMETRE CAPTURA (NUMERO DE CAPTURES A FER INSTANTANEAMENT)
+#CAPTURE NUMBER (NUMBER OF INSTANTANEOUS CAPTURES TO BE ACQUIRED)
 
 captures = 4 
 
 #########################################################################
 #########################################################################
 
-if ID == "HRCam1_":
-    TOKEN = "TOKEN"
-elif ID == "HRCam2_":
-    TOKEN = "TOKEN"
-elif ID == "HRCam3_":
-    TOKEN = "TOKEN"
-elif ID == "HRCam4_":
-    TOKEN = "TOKEN"
-elif ID == "HRCam5_":
-    TOKEN = "TOKEN"
-
-#print()
-#print("*********************** UNIVERSITAT DE BARCELONA ***********************")
-#print("******************** FACULTAT DE CIÈNCIES DE LA TERRA ******************")
-#print()
-#print("************************* XABIER BLANCH GORRIZ *************************")
-#print("*********** Codi desenvolupat en el marc d'una tesi doctoral ***********")
-#print("*************************** Codi multicàmera ***************************")
+print("*********************** UNIVERSITY OF BARCELONA ***********************")
+print("******************** FACULTY OF EARTH SCIENCES ******************")
 print()
-print(datetime.now().strftime("Hora: %H:%M Data: %d/%m/%Y"))
-print("Es realitzaran", captures, "captures fotogràfiques")
+print("************************* XABIER BLANCH GORRIZ *************************")
+print("*********** Code developed within the framework of a doctoral thesis ***********")
+print("*************************** Multi-camera code ***************************")
+print()
+print(datetime.now().strftime("Time: %H:%M Date: %d/%m/%Y"))
+print("A total of", captures, "photographic captures will be performed.")
 print()
 
-arrel_directori_directe = "/home/pi/" + ID + "Puigcercos_filetransfer/"
-path_directe = "/home/pi/" + ID + "Puigcercos_filetransfer"
-arrel_directori_final = "/home/pi/" + ID + "Puigcercos/"
-path_final = "/home/pi/" + ID + "Puigcercos"
+path_filetransfer = "/home/pi/" + ID + "_filetransfer"
+path_backup = "/home/pi/" + ID
 
 gphoto2_ISO = ["--set-config", "iso=1"]
 gphoto2_autodetect = ["--auto-detect"]
@@ -58,184 +44,166 @@ data_hora = datetime.now().strftime("%Y%m%d_%H%M")
 gphoto2_focus_sony = ["--set-config", "/main/actions/autofocus=1"]
 gphoto2_capture_download_sony = ["--capture-image-and-download"]
 gphoto2_capture_download_canon = ["--capture-image", "-F=" + str(captures), "-I=3="]
-gphoto2_borrarSD = ["--folder", "/store_00020001/DCIM/100CANON", "-R", "--delete-all-files"]
+gphoto2_SD_Erase = ["--folder", "/store_00020001/DCIM/100CANON", "-R", "--delete-all-files"]
 gphoto2_SD = ["--set-config", "capturetarget=1"]
-gphoto2_descarregarSD = ["--get-all-files"]
+gphoto2_SD_Transfer = ["--get-all-files"]
 
 count=1
 
-def seleccio_camera():
+def select_camera():
     global script
     camera=str(subprocess.check_output(['gphoto2', '--auto-detect']))
     if camera.find("Sony Alpha-A7r II") > 0:
         script=1
-        print("Càmera Sony Alpha-A7r II identificada correctament")
+        print("The Sony Alpha A7R II camera has been correctly identified")
     elif camera.find("Canon EOS 600D") > 0:
         script=2
-        print("Càmera Canon EOS 600D identificada correctament")
+        print("Canon EOS 600D camera correctly identified")
     elif camera.find("Canon EOS 77D") > 0:
         script=2
-        print("Càmera Canon EOS 77D identificada correctament")
+        print("Canon EOS 77D camera correctly identified")
 
-def directori():
+def folders():
     try:
-        os.makedirs(arrel_directori_directe)
-        print("Carpeta " + ID + "Puigcercos_filetransfer creada correctament")
-        os.makedirs(arrel_directori_final)
-        print("Carpeta " + ID + "Puigcercos creada correctament")
+        os.makedirs(path_filetransfer, exist_ok = True)
+        print("Folder " + ID + "_filetransfer created successfully")
+        os.makedirs(path_backup, exist_ok = True)
+        print("Folder " + ID + "created successfully")
     except:
-        print("Les carpetes " + ID + "Puigcercos i " + ID + "Puigcercos_filetransfer ja existeixen")
+        print("Folders " + ID + " and " + ID + "_filetransfer already exist")
 
-    os.chdir(arrel_directori_directe)
+    os.chdir(path_filetransfer)
 
-def captura_imatge_gphoto2_sony():
+def capture_gphoto2_sony():
     try:
         gp(gphoto2_capture_download_sony)
-        print("GPHOTO2 - Captura realitzada i descarregada")
+        print("GPHOTO2 - Capture completed and downloaded.")
         sleep(1)
     except:
-        print("Error GPHOTO2 - Error en la captura de fotografies")
+        print("Error GPHOTO2 - Error in the capture adquisition")
 
 def focus_gphoto2_sony():
     try:
         gp(gphoto2_focus_sony)
-        print("GPHOTO2 - Camera Sony enfocada correctament")
+        print("GPHOTO2 - Camera Sony auto focus activated")
         sleep(2)
     except:
-        print("Error GPHOTO2 - Camera no enfocada correctament")
+        print("Error GPHOTO2 - Camera not focused")
 
-def captura_imatge_gphoto2_canon():
+def capture_gphoto2_canon():
     try:
         gp(gphoto2_SD)
-        print("GPHOTO2 - SD Interna de la càmera seleccionada")
+        print("GPHOTO2 - Internal SD card of the selected camera")
     except:
-        print("Error GPHOTO2 - Error seleccionant la SD Interna de la càmera")
+        print("Error GPHOTO2 - Error selecting the internal SD card of the camera")
 
     try:
         gp(gphoto2_capture_download_canon)
-        print("GPHOTO2 - " + str(captures) + " captures realitzades correctament")
+        print("GPHOTO2 - " + str(captures) + " captures successfully taken")
         sleep(2)
     except:
-        print("Error GPHOTO2 - Error en la captura de fotografies")
+        print("Error GPHOTO2 - Error in capturing photos")
 
     try:
-        gp(gphoto2_descarregarSD)
-        print("GPHOTO2 - " + str(captures) + " captures descarregades correctament")
+        gp(gphoto2_SD_Transfer)
+        print("GPHOTO2 - " + str(captures) + " captures successfully downloaded")
     except:
-        print("Error GPHOTO2 - Error en la descarrega de fotografies")
+        print("Error GPHOTO2 - Error in downloading photos")
 
-
-def canvi_nom(count):
+def file_name(count):
      for file in os.listdir(path_directe):
             if len(file) < 20:
-                os.rename(arrel_directori_directe + file, arrel_directori_directe + ID + data_hora + "_" + str(count) + ".JPG")
-                print("Nom del fitxer", file, "canviat correctament a " + ID + data_hora + "_" + str(count) + ".JPG")
+                os.rename(os.path.join(path_filetransfer, file), os.path.join(path_filetransfer, ID + data_hora + "_" + str(count) + ".JPG"))
+                print("File", file, "succesfuly modified to " + ID + data_hora + "_" + str(count) + ".JPG")
                 count=count+1
 
 def dropbox_upload():
- if os.listdir(path_directe) == []:
-    print("No hi ha fitxers a la carpeta " + ID + "Puigcercos_filetransfer per pujar al Dropbox")
+ if os.listdir(path_filetransfer) == []:
+    print("There are no files in the " + ID + "Puigcercos_filetransfer folder to upload to Dropbox.")
  else:
     for file in os.listdir(path_directe):
-        f=open(arrel_directori_directe + file, 'rb')
+        f=open(os.path.join(path_filetransfer, file), 'rb')
         try:
            dbx = dropbox.Dropbox(TOKEN)
            res=dbx.files_upload(f.read(),'/' + file, mode=dropbox.files.WriteMode.overwrite)
-           shutil.move(arrel_directori_directe + file, arrel_directori_final + file)
-           print('fitxer', res.name, 'penjat correctament i mogut a la carpeta ' + ID + 'Puigcercos')
+           shutil.move(os.path.join(path_filetransfer, file), os.path.join(path_backup, file))
+           print('File ', res.name, 'uploaded successfully and moved to the folder ' + ID + 'Puigcercos.')
         except dropbox.exceptions.ApiError as err:
            print('*** API error', err)
            return none
     return res
 
 def borrar_fitxers():
-        data_actual = time.time()
-        eliminats=0
-        for fitxer in os.listdir(path_final):
-            data_fitxer = os.path.getmtime(arrel_directori_final + fitxer)
-            if ((data_actual - data_fitxer)/(24*3600))>=2:
-                os.unlink(arrel_directori_final + fitxer)
-                eliminats = eliminats + 1
-                print("Fitxer " + fitxer + " eliminat correctament")
+        date_time = time.time()
+        count=0
+        for file in os.listdir(path_backup):
+            date_file = os.path.getmtime(os.path.join(path_backup, file))
+            if ((date_time - date_file)/(24*3600))>=2:
+                os.unlink(os.path.join(path_backup, file))
+                count = count + 1
+                print("File " + file + " deleted successfully.")
 
-def borrar_error():
-	for file in os.listdir(path_directe):
-		if file[0:5] == "HRCam":
-			print("Fitxer " + file + " pendent d'enviar")
+def clear_error_img():
+	for file in os.listdir(path_filetransfer):
+		if file[0:5] == "DSLR_":
+			print("File " + file + " pending to send.")
 		else:
-			os.unlink(arrel_directori_directe + file)
-			print("Fitxer " + file + " corrupte. Ha estat eliminat")
+			os.unlink(os.path.join(path_backup, file))
+			print("File " + file + " corrupted. It has been deleted.")
 
 # SEQUENCIA DE FUNCIONS - PROGRAMA PRINCIPAL
 
-data = time.localtime()
-hora = data.tm_hour
-
-if  hora > 6:
-    print("** Inici seqüència fotogràfica **")
-    borrar_error()
-    sleep(2)
-    print()
-    directori()
-    print()
-    borrar_fitxers()
-    print()
-    sleep(2)
-    print("** Identificació de la càmera **")
-    print()
-    script=0
-    seleccio_camera()
-    print()
-    sleep(1)
-    print("** Inici de la seqüència fotogràfica **")
-    print()
-    if script == 1:
-        for count in range(1, captures+1):
-                try:
+print("** Start of photographic sequence **")
+clear_error_img()
+sleep(2)
+print()
+folders()
+print()
+clear_files()
+print()
+sleep(2)
+print("** Camera identification **")
+print()
+script=0
+select_camera()
+print()
+sleep(1)
+print("** Start of the photographic sequence **")
+print()
+if script == 1:
+	for count in range(1, captures+1):
+        	try:
                     focus_gphoto2_sony()
                     sleep(2)
-                    captura_imatge_gphoto2_sony()
+                    capture_gphoto2_sony()
                     sleep(1)
-                    canvi_nom(count)
+                    file_name(count)
                     sleep(1)
                 except:
-                    print("ERROR - Desconexió càmera")
+                    print("ERROR - Camera disconnected")
 
-    elif script == 2:
-        try:
-                gp(gphoto2_borrarSD)
-                captura_imatge_gphoto2_canon()
+elif script == 2:
+	try:
+                gp(gphoto2_SD_Erase)
+                capture_gphoto2_canon()
                 for count in range (1, captures+1):
-                    canvi_nom(count)
+                    file_name(count)
                     sleep(1)
         except:
-            print("ERROR - Desconexió càmera")
-    sleep(1)
-    print()
-    print("** Seqüencia de captura fotogràfica finalitzada **")
-    print()
-    print("** Codi finalitzat correctament **")
-    print()
-    temps_final = time.time()
-    temps_execucio = temps_final - temps_inicial
-    print("Temps d'execució: " + str(round(temps_execucio)) + " segons")
-    print("******************************************************************")
-else:
-    sleep(30)
-    print('** Inici seqüència de càrrega **')
-    borrar_error()
-    try:
-        print("** Inici de la seqüència de càrrega al Dropbox **")
-        print()
-        dropbox_upload()
-        sleep(1)
-    except:
-        print("Error DROPBOX - Error en la càrrega de fitxers a Dropbox")
-        print()
-    print("** Codi finalitzat correctament **")
-    print()
-    temps_final = time.time()
-    temps_execucio = temps_final - temps_inicial
-    print("Temps d'execució: " + str(round(temps_execucio)) + " segons")
-    print("******************************************************************")
-
+        	print("ERROR - Camera disconnected")
+sleep(1)
+print()
+print("** Photographic capture sequence completed **")
+print()
+try:
+	print("** Start of the Dropbox upload sequence **")
+    	print()
+    	dropbox_upload()
+    	sleep(1)
+except:
+	print("DROPBOX Error - Error uploading files to Dropbox")
+    	print()
+	
+print("** Code executed successfully **")
+print()
+print("******************************************************************")
