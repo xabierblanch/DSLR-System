@@ -1,4 +1,4 @@
-# High Resolution System
+# High Resolution Photogrammetric System
 Author: Xabier Blanch<br/>
 Contact: xabierblanch@gmail.com<br/>
 
