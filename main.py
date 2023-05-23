@@ -1,3 +1,20 @@
+'''To execute this code, you need to complete the following steps:
+Install the required libraries: Make sure you have installed the necessary libraries, including gphoto2, dropbox, and any other dependencies.
+Obtain a Dropbox token: You need to generate a Dropbox token to authorize the script to upload files to your Dropbox account. You can obtain a token by creating a Dropbox app and following the authentication process. Once you have the token, replace the empty string TOKEN = "" with your actual token.
+Set the camera identification: Based on the output of the gphoto2 --auto-detect command, you need to identify your cameras and modify the select_camera() function accordingly. Update the conditions within the function to correctly identify your Sony Alpha A7R II and Canon cameras.
+Configure other parameters: You may need to adjust other parameters such as the number of captures, file paths, and camera settings based on your specific requirements.
+
+Once you have completed these steps, you can run the script, and it will perform the following actions:
+1 - Identify the cameras connected to the system.
+2 - Create the necessary folders for file transfer and backup.
+3 - Capture images using either the Sony or Canon camera (based on the identified camera).
+4 - Rename the captured files based on the capture count.
+5 - Upload the files to Dropbox using the provided token.
+6 - Move the uploaded files to the backup folder.
+7 - Delete files older than 2 days from the backup folder.
+
+Please ensure that you have a clear understanding of the code and customize it according to your needs before running it. Also, remember to handle any potential errors or exceptions that may occur during the execution.'''
+
 from time import sleep
 import time
 from datetime import datetime
