@@ -34,9 +34,11 @@ temps_inicial = time.time()
 
 ID = "DSLR_"
 
-#DROPBOX TOKEN
+#DROPBOX USER INFORMATION (check official Dropbox API)
 
-TOKEN = ""
+app_key = ''
+app_secret = ''
+refresh_token = '' #https://github.com/dropbox/dropbox-sdk-python/blob/main/example/oauth/commandline-oauth.py
 
 #CAPTURE NUMBER (NUMBER OF INSTANTANEOUS CAPTURES TO BE ACQUIRED)
 
@@ -182,6 +184,10 @@ def dropbox_upload():
     For each file, it uploads the file to Dropbox and moves it to the backup folder.
     Prints a success message for each file successfully uploaded and moved.
     If there is an API error during the upload process, it prints an error message.
+    Args:
+	app_key (str): Dropbox app key.
+	app_secret (str): Dropbox app secret.
+	refresh_token (str): Dropbox refresh token.  
     """
 	if os.listdir(path_filetransfer) == []:
 		print("There are no files in the " + ID + "Puigcercos_filetransfer folder to upload to Dropbox.")
@@ -189,13 +195,13 @@ def dropbox_upload():
     		for file in os.listdir(path_filetransfer):
         	f=open(os.path.join(path_filetransfer, file), 'rb')
         	try:
-           		dbx = dropbox.Dropbox(TOKEN)
+           		dbx = dropbox.Dropbox(app_key=app_key, app_secret=app_secret, oauth2_refresh_token=refresh_token)
            		res=dbx.files_upload(f.read(),'/' + file, mode=dropbox.files.WriteMode.overwrite)
            		shutil.move(os.path.join(path_filetransfer, file), os.path.join(path_backup, file))
            		print('File ', res.name, 'uploaded successfully and moved to the folder ' + ID + 'Puigcercos.')
         	except dropbox.exceptions.ApiError as err:
-           		print('*** API error', err)
-
+           		print('*** API error', err)			
+			
 # Function to delete files older than 2 days from the backup folder
 def clear_files():
     """
