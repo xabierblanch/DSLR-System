@@ -1,22 +1,17 @@
 #!/bin/bash
 
+# Sleep for 25 seconds (wait for WiFi connection)
 sleep 25
 
-sh /home/pi/Scripts/log_on.sh
+#create logs folder
+mkdir -p /home/pi/logs
 
-python3 /home/pi/Scripts/upload_log_on.py
+#run main script
+python3 /home/pi/scripts/main.py >> /home/pi/logs/script.log
 
-sh /home/pi/Scripts/logs_RasPi.sh
+#move and upload logs
+python3 /home/pi/scripts/logs.py
 
-python3 /home/pi/Scripts/upload_logs.py
-
-sudo python3 /home/pi/Scripts/HRCam_UB_v4.py >> /home/pi/logs/log_Script.log
-
-python3 /home/pi/Scripts/upload_log_on.py
-
-sh /home/pi/Scripts/logs_RasPi.sh
-
-python3 /home/pi/Scripts/upload_logs.py
-
+#shutdown RPi (WittyPi function)
 gpio -g mode 4 out
 gpio -g write 4 0
