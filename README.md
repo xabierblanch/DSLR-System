@@ -1,4 +1,4 @@
-# DSLR System
+# High Resolution System
 Author: Xabier Blanch<br/>
 Contact: xabierblanch@gmail.com<br/>
 
