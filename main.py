@@ -4,7 +4,6 @@ from datetime import datetime
 from sh import gphoto2 as gp
 import os
 import dropbox
-import RPi.GPIO as GPIO
 import shutil
 import subprocess
 
@@ -16,6 +15,10 @@ temps_inicial = time.time()
 #SYSTEM IDENTIFIER -> IMPORTANT TO CHANGE IT CORRECTLY
 
 ID = "DSLR_"
+
+#DROPBOX TOKEN
+
+TOKEN = ""
 
 #CAPTURE NUMBER (NUMBER OF INSTANTANEOUS CAPTURES TO BE ACQUIRED)
 
@@ -50,99 +53,106 @@ gphoto2_SD_Transfer = ["--get-all-files"]
 
 count=1
 
+# Function to select the camera based on the output of the 'gphoto2 --auto-detect' command
 def select_camera():
-    global script
-    camera=str(subprocess.check_output(['gphoto2', '--auto-detect']))
-    if camera.find("Sony Alpha-A7r II") > 0:
-        script=1
-        print("The Sony Alpha A7R II camera has been correctly identified")
-    elif camera.find("Canon EOS 600D") > 0:
-        script=2
-        print("Canon EOS 600D camera correctly identified")
-    elif camera.find("Canon EOS 77D") > 0:
-        script=2
-        print("Canon EOS 77D camera correctly identified")
+    	global script
+    	camera=str(subprocess.check_output(['gphoto2', '--auto-detect']))
+    	if camera.find("Sony Alpha-A7r II") > 0:
+        	script=1
+        	print("The Sony Alpha A7R II camera has been correctly identified")
+    	elif camera.find("Canon EOS 600D") > 0:
+	        script=2
+        	print("Canon EOS 600D camera correctly identified")
+    	elif camera.find("Canon EOS 77D") > 0:
+        	script=2
+        	print("Canon EOS 77D camera correctly identified")
 
+# Function to create necessary folders for file transfer and backup
 def folders():
-    try:
-        os.makedirs(path_filetransfer, exist_ok = True)
-        print("Folder " + ID + "_filetransfer created successfully")
-        os.makedirs(path_backup, exist_ok = True)
-        print("Folder " + ID + "created successfully")
-    except:
-        print("Folders " + ID + " and " + ID + "_filetransfer already exist")
+    	try:
+        	os.makedirs(path_filetransfer, exist_ok = True)
+        	print("Folder " + ID + "_filetransfer created successfully")
+        	os.makedirs(path_backup, exist_ok = True)
+        	print("Folder " + ID + "created successfully")
+    	except:
+        	print("Folders " + ID + " and " + ID + "_filetransfer already exist")
 
-    os.chdir(path_filetransfer)
+    	os.chdir(path_filetransfer)
 
+# Function to capture an image using Sony camera with gphoto2
 def capture_gphoto2_sony():
-    try:
-        gp(gphoto2_capture_download_sony)
-        print("GPHOTO2 - Capture completed and downloaded.")
-        sleep(1)
-    except:
-        print("Error GPHOTO2 - Error in the capture adquisition")
-
+    	try:
+        	gp(gphoto2_capture_download_sony)
+        	print("GPHOTO2 - Capture completed and downloaded.")
+        	sleep(1)
+    	except:
+	        print("Error GPHOTO2 - Error in the capture adquisition")
+	
+# Function to activate auto-focus on Sony camera with gphoto2
 def focus_gphoto2_sony():
-    try:
-        gp(gphoto2_focus_sony)
-        print("GPHOTO2 - Camera Sony auto focus activated")
-        sleep(2)
-    except:
-        print("Error GPHOTO2 - Camera not focused")
-
+	try:
+    		gp(gphoto2_focus_sony)
+        	print("GPHOTO2 - Camera Sony auto focus activated")
+        	sleep(2)
+    	except:
+	        print("Error GPHOTO2 - Camera not focused")
+	
+# Function to capture images using Canon camera with gphoto2
 def capture_gphoto2_canon():
-    try:
-        gp(gphoto2_SD)
-        print("GPHOTO2 - Internal SD card of the selected camera")
-    except:
-        print("Error GPHOTO2 - Error selecting the internal SD card of the camera")
+    	try:
+        	gp(gphoto2_SD)
+        	print("GPHOTO2 - Internal SD card of the selected camera")
+    	except:
+	        print("Error GPHOTO2 - Error selecting the internal SD card of the camera")
 
-    try:
-        gp(gphoto2_capture_download_canon)
-        print("GPHOTO2 - " + str(captures) + " captures successfully taken")
-        sleep(2)
-    except:
-        print("Error GPHOTO2 - Error in capturing photos")
+    	try:
+        	gp(gphoto2_capture_download_canon)
+        	print("GPHOTO2 - " + str(captures) + " captures successfully taken")
+        	sleep(2)
+    	except:
+        	print("Error GPHOTO2 - Error in capturing photos")
 
-    try:
-        gp(gphoto2_SD_Transfer)
-        print("GPHOTO2 - " + str(captures) + " captures successfully downloaded")
-    except:
-        print("Error GPHOTO2 - Error in downloading photos")
-
+    	try:
+	        gp(gphoto2_SD_Transfer)
+        	print("GPHOTO2 - " + str(captures) + " captures successfully downloaded")
+    	except:
+	        print("Error GPHOTO2 - Error in downloading photos")
+	
+# Function to rename files based on capture count
 def file_name(count):
-     for file in os.listdir(path_directe):
-            if len(file) < 20:
-                os.rename(os.path.join(path_filetransfer, file), os.path.join(path_filetransfer, ID + data_hora + "_" + str(count) + ".JPG"))
-                print("File", file, "succesfuly modified to " + ID + data_hora + "_" + str(count) + ".JPG")
-                count=count+1
-
+     	for file in os.listdir(path_filetransfer):
+        	if len(file) < 20:
+                	os.rename(os.path.join(path_filetransfer, file), os.path.join(path_filetransfer, ID + data_hora + "_" + str(count) + ".JPG"))
+                	print("File", file, "successfully modified to " + ID + data_hora + "_" + str(count) + ".JPG")
+                	count=count+1
+		
+# Function to upload files to Dropbox
 def dropbox_upload():
- if os.listdir(path_filetransfer) == []:
-    print("There are no files in the " + ID + "Puigcercos_filetransfer folder to upload to Dropbox.")
- else:
-    for file in os.listdir(path_directe):
-        f=open(os.path.join(path_filetransfer, file), 'rb')
-        try:
-           dbx = dropbox.Dropbox(TOKEN)
-           res=dbx.files_upload(f.read(),'/' + file, mode=dropbox.files.WriteMode.overwrite)
-           shutil.move(os.path.join(path_filetransfer, file), os.path.join(path_backup, file))
-           print('File ', res.name, 'uploaded successfully and moved to the folder ' + ID + 'Puigcercos.')
-        except dropbox.exceptions.ApiError as err:
-           print('*** API error', err)
-           return none
-    return res
+	if os.listdir(path_filetransfer) == []:
+		print("There are no files in the " + ID + "Puigcercos_filetransfer folder to upload to Dropbox.")
+ 	else:
+    		for file in os.listdir(path_directe):
+        	f=open(os.path.join(path_filetransfer, file), 'rb')
+        	try:
+           		dbx = dropbox.Dropbox(TOKEN)
+           		res=dbx.files_upload(f.read(),'/' + file, mode=dropbox.files.WriteMode.overwrite)
+           		shutil.move(os.path.join(path_filetransfer, file), os.path.join(path_backup, file))
+           		print('File ', res.name, 'uploaded successfully and moved to the folder ' + ID + 'Puigcercos.')
+        	except dropbox.exceptions.ApiError as err:
+           		print('*** API error', err)
 
-def borrar_fitxers():
+# Function to delete files older than 2 days from the backup folder
+def clear_files():
         date_time = time.time()
         count=0
         for file in os.listdir(path_backup):
-            date_file = os.path.getmtime(os.path.join(path_backup, file))
-            if ((date_time - date_file)/(24*3600))>=2:
-                os.unlink(os.path.join(path_backup, file))
-                count = count + 1
-                print("File " + file + " deleted successfully.")
-
+        	date_file = os.path.getmtime(os.path.join(path_backup, file))
+            	if ((date_time - date_file)/(24*3600))>=2:
+                	os.unlink(os.path.join(path_backup, file))
+                	count = count + 1
+                	print("File " + file + " deleted successfully.")
+		
+# Function to clear error images from file transfer folder
 def clear_error_img():
 	for file in os.listdir(path_filetransfer):
 		if file[0:5] == "DSLR_":
@@ -151,8 +161,7 @@ def clear_error_img():
 			os.unlink(os.path.join(path_backup, file))
 			print("File " + file + " corrupted. It has been deleted.")
 
-# SEQUENCIA DE FUNCIONS - PROGRAMA PRINCIPAL
-
+# Main code
 print("** Start of photographic sequence **")
 clear_error_img()
 sleep(2)
