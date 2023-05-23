@@ -21,19 +21,24 @@ Image:
 Usage
 -----
 
-* [HRCam_UB_v4.py](HRCam_UB_v4.py) -> Main code (executes camera control and photo uploading)
+* [main.py](main.py) -> Main code (executes camera control and photo uploading)
 
 Raspberry auxiliary codes (sh format)
 
 * [force_shutdown.sh](force_shutdown.sh)
-* [log_on.sh](log_on.sh)
-* [logs_RasPi.sh](logs_RasPi.sh)
+* [logs.sh](logs.sh)
 * [run.sh](run.sh)
 
-Python codes (logs)
+The main code will perfom the following actions:
+-----
 
-* [upload_log_on.py](upload_log_on.py)
-* [upload_logs.py](upload_logs.py)
+1. Identify the cameras connected to the system.
+2. Create the necessary folders for file transfer and backup.
+3. Capture images using either the Sony or Canon camera (based on the identified camera).
+4. Rename the captured files based on the capture count.
+5. Upload the files to Dropbox using the provided token.
+6. Move the uploaded files to the backup folder.
+7. Delete files older than 2 days from the backup folder.
 
 Contribute
 -----
