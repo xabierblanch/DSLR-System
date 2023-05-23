@@ -29,8 +29,8 @@ Raspberry auxiliary codes (sh format)
 * [logs.sh](logs.sh)
 * [run.sh](run.sh)
 
-The main code will perfom the following actions:
------
+Main code will perfom the following actions:
+---
 
 1. Identify the cameras connected to the system.
 2. Create the necessary folders for file transfer and backup.
@@ -39,6 +39,11 @@ The main code will perfom the following actions:
 5. Upload the files to Dropbox using the provided token.
 6. Move the uploaded files to the backup folder.
 7. Delete files older than 2 days from the backup folder.
+
+Logs.sh will perform the following action:
+---
+1. The script will copy the WittyPi log file to the specified folder (`/home/pi/logs` by default) and upload it to the "/log" folder in your Dropbox account.
+
 
 Contribute
 -----
