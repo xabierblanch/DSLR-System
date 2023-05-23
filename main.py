@@ -60,7 +60,7 @@ path_backup = "/home/pi/" + ID
 
 gphoto2_ISO = ["--set-config", "iso=1"]
 gphoto2_autodetect = ["--auto-detect"]
-data_hora = datetime.now().strftime("%Y%m%d_%H%M")
+date_time = datetime.now().strftime("%Y%m%d_%H%M")
 gphoto2_focus_sony = ["--set-config", "/main/actions/autofocus=1"]
 gphoto2_capture_download_sony = ["--capture-image-and-download"]
 gphoto2_capture_download_canon = ["--capture-image", "-F=" + str(captures), "-I=3="]
@@ -72,6 +72,11 @@ count=1
 
 # Function to select the camera based on the output of the 'gphoto2 --auto-detect' command
 def select_camera():
+    """
+    Selects the camera based on the output of the 'gphoto2 --auto-detect' command.
+    Sets the global variable 'script' according to the identified camera.
+    Prints the identification message for the selected camera.
+    """
     	global script
     	camera=str(subprocess.check_output(['gphoto2', '--auto-detect']))
     	if camera.find("Sony Alpha-A7r II") > 0:
@@ -86,6 +91,10 @@ def select_camera():
 
 # Function to create necessary folders for file transfer and backup
 def folders():
+    """
+    Creates the necessary folders for file transfer and backup.
+    If the folders already exist, it prints a message indicating their existence.
+    """
     	try:
         	os.makedirs(path_filetransfer, exist_ok = True)
         	print("Folder " + ID + "_filetransfer created successfully")
@@ -98,6 +107,11 @@ def folders():
 
 # Function to capture an image using Sony camera with gphoto2
 def capture_gphoto2_sony():
+    """
+    Captures an image using the Sony camera with the 'gphoto2' command.
+    If the capture is successful, it prints a success message.
+    If there is an error in the capture acquisition, it prints an error message.
+    """
     	try:
         	gp(gphoto2_capture_download_sony)
         	print("GPHOTO2 - Capture completed and downloaded.")
@@ -107,6 +121,11 @@ def capture_gphoto2_sony():
 	
 # Function to activate auto-focus on Sony camera with gphoto2
 def focus_gphoto2_sony():
+    """
+    Activates the auto-focus on the Sony camera with the 'gphoto2' command.
+    If the auto-focus activation is successful, it prints a success message.
+    If there is an error in focusing the camera, it prints an error message.
+    """
 	try:
     		gp(gphoto2_focus_sony)
         	print("GPHOTO2 - Camera Sony auto focus activated")
@@ -116,6 +135,12 @@ def focus_gphoto2_sony():
 	
 # Function to capture images using Canon camera with gphoto2
 def capture_gphoto2_canon():
+    """
+    Captures images using the Canon camera with the 'gphoto2' command.
+    If the internal SD card of the camera is selected successfully, it prints a success message.
+    If the capture is successful, it prints the number of captures taken.
+    If there is an error in capturing photos or downloading them, it prints an error message.
+    """
     	try:
         	gp(gphoto2_SD)
         	print("GPHOTO2 - Internal SD card of the selected camera")
@@ -137,18 +162,30 @@ def capture_gphoto2_canon():
 	
 # Function to rename files based on capture count
 def file_name(count):
+    """
+    Renames files in the file transfer folder based on the capture count.
+    Each file is renamed using the pattern: "{ID}{data_hora}_{count}.JPG"
+    Prints a success message for each file successfully renamed.
+    """
      	for file in os.listdir(path_filetransfer):
         	if len(file) < 20:
-                	os.rename(os.path.join(path_filetransfer, file), os.path.join(path_filetransfer, ID + data_hora + "_" + str(count) + ".JPG"))
-                	print("File", file, "successfully modified to " + ID + data_hora + "_" + str(count) + ".JPG")
+                	os.rename(os.path.join(path_filetransfer, file), os.path.join(path_filetransfer, ID + date_time + "_" + str(count) + ".JPG"))
+                	print("File", file, "successfully modified to " + ID + date_time + "_" + str(count) + ".JPG")
                 	count=count+1
 		
 # Function to upload files to Dropbox
 def dropbox_upload():
+    """
+    Uploads files from the filetransfer folder to Dropbox.
+    If there are no files to upload, it prints a message indicating the absence of files.
+    For each file, it uploads the file to Dropbox and moves it to the backup folder.
+    Prints a success message for each file successfully uploaded and moved.
+    If there is an API error during the upload process, it prints an error message.
+    """
 	if os.listdir(path_filetransfer) == []:
 		print("There are no files in the " + ID + "Puigcercos_filetransfer folder to upload to Dropbox.")
  	else:
-    		for file in os.listdir(path_directe):
+    		for file in os.listdir(path_filetransfer):
         	f=open(os.path.join(path_filetransfer, file), 'rb')
         	try:
            		dbx = dropbox.Dropbox(TOKEN)
@@ -160,6 +197,10 @@ def dropbox_upload():
 
 # Function to delete files older than 2 days from the backup folder
 def clear_files():
+    """
+    Deletes files older than 2 days from the backup folder.
+    Prints a success message for each file successfully deleted.
+    """
         date_time = time.time()
         count=0
         for file in os.listdir(path_backup):
@@ -171,6 +212,11 @@ def clear_files():
 		
 # Function to clear error images from file transfer folder
 def clear_error_img():
+    """
+    Clears error images from the file transfer folder.
+    Identifies error images based on the file name starting with "DSLR_".
+    Deletes the error images and prints a message for each deleted file.
+    """
 	for file in os.listdir(path_filetransfer):
 		if file[0:5] == "DSLR_":
 			print("File " + file + " pending to send.")
