@@ -25,9 +25,10 @@ Usage
 
 Raspberry auxiliary codes (sh format)
 
-* [force_shutdown.sh](force_shutdown.sh)
 * [logs.sh](logs.sh)
 * [run.sh](run.sh)
+* [keepalive.sh](keepalive.sh)
+* [shutdown.sh](shutdown.sh)
 
 Main code will perfom the following actions:
 ---
@@ -44,6 +45,9 @@ Logs.sh will perform the following action:
 ---
 1. The script will copy the WittyPi log file to the specified folder (`/home/pi/logs` by default) and upload it to the "/log" folder in your Dropbox account.
 
+keepalive.sh / shutdown.sh
+---
+1. This code activates a relay connected to pin 23 of the Raspberry Pi, which allows disabling the automatic system shutdown and keeping it powered on, using "sh keepalive.sh" for activation and "sh shutdown.sh" for system closure.
 
 Contribute
 -----
